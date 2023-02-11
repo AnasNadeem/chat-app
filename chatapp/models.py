@@ -1,6 +1,6 @@
-import imp
 from django.db import models
 from django.contrib.auth.models import User
+
 
 # Create your models here.
 class Message(models.Model):
@@ -13,4 +13,3 @@ class Message(models.Model):
 
     def last_10_msg(self):
         return Message.objects.order_by('-timestamp').all()[:10]
-        

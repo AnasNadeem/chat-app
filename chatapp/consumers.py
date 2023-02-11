@@ -4,12 +4,13 @@ from asgiref.sync import async_to_sync
 from chatapp.models import Message
 from django.contrib.auth.models import User
 
+
 class ChatConsumer(WebsocketConsumer):
 
     def fetch_messages(self, data):
         messages = Message.last_10_msg()
         content = {
-            'messages':self.messages_to_json(messages)
+            'messages': self.messages_to_json(messages)
         }
         self.send_message(content)
 
@@ -18,11 +19,10 @@ class ChatConsumer(WebsocketConsumer):
         author_user = User.objects.filter(username=author)[0]
         message = Message.objects.create(author=author_user, content=data['message'])
         content = {
-            'command':'new_message',
+            'command': 'new_message',
             'message': self.message_to_json(message)
         }
         return self.send_chat_message(content)
-
 
     def messages_to_json(self, messages):
         result = []
@@ -32,15 +32,15 @@ class ChatConsumer(WebsocketConsumer):
 
     def message_to_json(self, message):
         data = {
-            'author':message.author.username,
-            'content':message.content,
-            'timestamp':str(message.timestamp)
+            'author': message.author.username,
+            'content': message.content,
+            'timestamp': str(message.timestamp)
         }
         return data
 
     commands = {
-        'fetch_messages':fetch_messages,
-        'new_message':new_message
+        'fetch_messages': fetch_messages,
+        'new_message': new_message
     }
 
     def connect(self):
